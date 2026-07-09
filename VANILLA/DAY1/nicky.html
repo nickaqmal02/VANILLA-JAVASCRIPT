@@ -1,0 +1,100 @@
+<! DOCTYPE html>
+
+<html>
+  <head>
+    <title>Day 1</title>
+    <meta charset="UTF-8" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  </head>
+
+
+
+  <body>
+      
+          <div class="grid grid-cols-11 gap-2 p-20">
+            <div class="col-start-1 row-start-1 text-4xl font-bold items-center justify-center text-center">G</div>
+            <div class="col-start-1 row-start-2 text-4xl font-bold items-center justify-center text-center">G</div>
+            <div class="col-start-1 row-start-3 text-4xl font-bold items-center justify-center text-center">G</div>
+            <div class="col-start-1 row-start-4 text-4xl font-bold items-center justify-center text-center">G</div>
+            <div class="col-start-1 row-start-5 text-4xl font-bold items-center justify-center text-center">G</div>
+            <div class="col-start-1 row-start-6 text-4xl font-bold items-center justify-center text-center">G</div>
+
+            <div class="col-span-9 col-start-2 bg-pink-100 flex items-center justify-center font-bold rounded-xl inset-shadow-sm text-4xl"> Enter GitHub Username </div>
+            <div class="col-span-3 col-start-5 bg-blue-200 flex items-center justify-center rounded-xl text-2xl"> ---------  </div>
+            <div class="col-span-3 col-start-5 row-start-3 flex items-center justify-center text-xl">
+              <input type="text" id="username" placeholder="Enter GitHub username" 
+                class="block w-full font-mono rounded-md bg-white px-8 py-3 text-base text-slate-900 outline outline-1 -outline-offset-1 outline-slate-300 placeholder:text-slate-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+
+            </div>
+            <div class="col-span-3 col-start-5 row-start-4 flex items-center justify-center text-xl font-mono">
+                <button onclick="searchUser()" class="block px-8 py-3  w-full rounded-xl text-slate-900 bg-blue-200 hover:bg-sky-700 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500 ...">Search</button>
+
+
+            </div>
+            <div id="result" class="col-span-3 col-start-5 row-start-5 flex items-center justify-center text-xl font-mono">
+              
+
+            </div>
+          </div>
+
+            <script>
+              function searchUser() {
+                const username = document.getElementById('username').value;
+
+                if(!username) {
+                  document.getElementById('result').innerHTML = 'Please enter a username';
+                  return;
+                }
+
+                fetch(`https://api.github.com/users/${username}`)
+                  .then(response => {
+                    if(!response.ok) {
+                      throw new Error('User not found');
+
+                    }
+                    return response.json();
+                  })
+                  .then(data => {
+                    document.getElementById('result').innerHTML = `
+                      <div class="flex flex-col items-center gap-3 w-full">
+                        <div class="relative">
+                          <img src="${data.avatar_url}" width="120" class="skew-3 rounded-full border-4 border-sky-500 shadow-xl">
+                        </div>
+                        <h2 class="text-2xl font-bold text-center text-gray-800 mt-2">${data.name || data.login}</h2>
+                        <p class="text-gray-500 text-sm">@${data.login}</p>
+                        
+                        <div class="grid grid-cols-3 gap-3 w-full mt-2">
+                            <div class="bg-blue-50 p-2 rounded-lg text-center">
+                              <p class="text-2xl font-bold text-blue-600">${data.followers}</p>
+                              <p class="text-xs text-grey-500 uppercase tracking-wider">Followers</p>
+                            </div>
+                            <div class="bg-blue-50 p-2 rounded-lg text-center">
+                               <p class="text-2xl font-bold text-blue-600">${data.following}</p>
+                               <p class="text-xs text-grey-500 uppercase tracking-wider">Following</p>
+                            </div>
+                            <div class="bg-blue-50 p-2 rounded-lg text-center">
+                               <p class="text-2xl font-bold text-blue-600">${data.public_repos}</p>
+                               <p class="text-xs text-grey-500 uppercase tracking-wider">Repos</p>
+
+                            </div>
+
+                        </div>
+                          <a href="${data.html_url}" target="_blank" class="inline-block bg-sky-500 hover:bg-sky-700 text-white font-medium py-2.5 px-8 rounded-lg transition-all hover:scale-105 shadow-md mt-3">
+        View GitHub Profile →
+      </a>
+                      </div>
+                      `;
+                  })
+                  .catch(error => {
+                    document.getElementById('result').innerHTML =
+                      `<p style="color:red"> ${error.message}</p>`
+                  });
+              }
+            </script>
+
+  </body>
+
+
+</html>
