@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+
+  <div class="flex flex-col pt-20 p-3 gap-3 content-center text-center font-mono">
+
+    <div id="title-section content-center">
+      <h1 id="welcome-msg" class="font-bold text-center text-4xl font-mono">Hello </h1>
+    </div>
+    <div id=" flex flex-col input-section" class="content-center font-mono text-center font-extrabold">
+
+      <div id="row-section">
+        <label class="font-normal"> Please Enter How Many Row you want to generate: </label><br>
+        <input type="text" id="row" placeholder="Please enter the row" class="px-15 py-1 text-center">
+      </div>
+
+      <div>
+        <label class="font-normal"> Please Enter How Many Columns you want to generate: </label><br>
+        <input type="text" id="column" placeholder="Please enter the column size" class="px-15 py-1 text-center">
+      </div>
+
+
+
+    </div>
+
+    <div class="p-1">
+      <button id="generate-grid" class="border-2 rounded-md hover:shadow-md bg-cyan-100 px-7 py-1">Generate
+        Now</button>
+    </div>
+
+    <!-- container to put this grid generated -->
+    <div id="grid-container" class="grid gap-2 mt-4 p-4"></div>
+
+  </div>
+
+
+  <script>
+    // first skali we will get the element lah 
+    const generatebutton = document.getElementById('generate-grid');
+    const row = document.getElementById('row');
+    const column = document.getElementById('column');
+    const gridContainer = document.getElementById('grid-container');
+
+    generatebutton.addEventListener("click", function () {
+
+      // and then dale first 
+      const rows = parseInt(row.value);
+      const columns = parseInt(column.value);
+
+      //validare first
+      if (isNaN(rows) || isNaN(columns) || rows <= 0 || columns <= 0) {
+        alert('Please enter valid positive numbers for both row and columns!');
+        return;
+      }
+
+      //clear previous grid duluh
+      gridContainer.innerHTML = '';
+
+      // generate grid template columns
+      gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+
+      // generate the grid <header>
+      for (let i = 0; i < rows * columns; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'border-2 border-gray-300 p-4 bg-blue-50 hover:bg-blue-100 transition-colors rounded-md';
+        cell.textContent = i + 1;
+        gridContainer.appendChild(cell);
+
+      }
+
+      console.log(`generated ${rows} x ${columns} grid = ${rows * columns} cells`);
+    });
+
+  </script>
+</body>
+
+</html>
